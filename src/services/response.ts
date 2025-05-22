@@ -10,7 +10,7 @@ export class ResponseService {
     this.#ai = ai;
   }
 
-  async sendMessage(input: { messageId: string; message: string }) {
+  async start(input: { messageId: string; message: string }) {
     const { messageId, message } = input;
     const stream = await this.#ai.sendMessage({ message });
 

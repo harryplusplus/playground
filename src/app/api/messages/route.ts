@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   }
 
   await idempotencyService.add(messageId);
-  await responseService.sendMessage({ messageId, message });
+  await responseService.start({ messageId, message });
 
   return new NextResponse(JSON.stringify({}), { status: 201 });
 }
