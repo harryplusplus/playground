@@ -14,27 +14,24 @@ export class ResponseService {
     const { messageId, message } = input;
     const stream = await this.#ai.sendMessage({ message });
 
-    const task = async () => {
+    return new Promise<void>(async (resolve, reject) => {
       try {
         for await (const chunk of stream) {
           const text =
             chunk.candidates?.at(0)?.content?.parts?.at(0)?.text ?? "";
           if (!text) continue;
-          console.log("@ m", text);
           await this.#kv.push(this.#redisKey(messageId), `m:${text}`);
         }
         await this.#kv.push(this.#redisKey(messageId), "c:");
-        console.log("@ c");
+        resolve();
       } catch (e) {
         await this.#kv.push(
           this.#redisKey(messageId),
           `e:${JSON.stringify(e)}`
         );
-        console.log("@ e", e);
+        reject(e);
       }
-    };
-
-    task();
+    });
   }
 
   async popEvent(messageId: string) {

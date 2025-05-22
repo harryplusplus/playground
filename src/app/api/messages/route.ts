@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest, after } from "next/server";
 import { KvService } from "@/services/kv";
 import { IdempotencyService } from "@/services/idempotency";
 import { ResponseService } from "@/services/response";
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   }
 
   await idempotencyService.add(messageId);
-  await responseService.start({ messageId, message });
+  after(responseService.start({ messageId, message }));
 
   return new NextResponse(JSON.stringify({}), { status: 201 });
 }
