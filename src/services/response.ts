@@ -20,14 +20,17 @@ export class ResponseService {
           const text =
             chunk.candidates?.at(0)?.content?.parts?.at(0)?.text ?? "";
           if (!text) continue;
+          console.log("@ m", text);
           await this.#kv.push(this.#redisKey(messageId), `m:${text}`);
         }
         await this.#kv.push(this.#redisKey(messageId), "c:");
+        console.log("@ c");
       } catch (e) {
         await this.#kv.push(
           this.#redisKey(messageId),
           `e:${JSON.stringify(e)}`
         );
+        console.log("@ e", e);
       }
     };
 
