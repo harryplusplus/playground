@@ -19,6 +19,6 @@ export class KvService {
   }
 
   async pop(key: string) {
-    return await this.#redis.lpop<string>(key, 1);
+    return await this.#redis.lpop<string>(key);
   }
 }

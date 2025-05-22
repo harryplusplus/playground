@@ -11,9 +11,9 @@ const responseService = new ResponseService(kvService, aiService);
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { messageId: string } }
+  { params }: { params: Promise<{ messageId: string }> }
 ) {
-  const { messageId } = params;
+  const { messageId } = await params;
 
   const encoder = new TextEncoder();
   const readableStream = new ReadableStream({
@@ -36,6 +36,7 @@ export async function GET(
           attempts++;
           if (attempts >= 10) {
             controller.error(new Error("Message is not exist."));
+            console.error("Message is not exist. messageId:", messageId);
             break;
           } else {
             await new Promise((resolve) => setTimeout(resolve, 500));
