@@ -1,5 +1,5 @@
-import World from "@/components/world";
+import Scene from "@/components/Scene";
 
 export default function Home() {
-  return <World />;
+  return <Scene />;
 }
