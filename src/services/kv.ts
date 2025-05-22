@@ -13,7 +13,12 @@ export class KvService {
     return await this.#redis.set<string>(key, value, { ex: daySeconds });
   }
 
-  async expire(key: string) {
-    return await this.#redis.expire(key, daySeconds);
+  async push(key: string, value: string) {
+    await this.#redis.rpush(key, value);
+    await this.#redis.expire(key, daySeconds);
+  }
+
+  async pop(key: string) {
+    return await this.#redis.lpop<string>(key, 1);
   }
 }

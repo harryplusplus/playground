@@ -7,16 +7,16 @@ export class IdempotencyService {
     this.#kv = kv;
   }
 
-  async exist(idempotencyKey: string) {
-    const value = await this.#kv.get(this.#redisKey(idempotencyKey));
+  async exist(messageId: string) {
+    const value = await this.#kv.get(this.#redisKey(messageId));
     return value !== null;
   }
 
-  async add(idempotencyKey: string) {
-    await this.#kv.set(this.#redisKey(idempotencyKey), "1");
+  async add(messageId: string) {
+    await this.#kv.set(this.#redisKey(messageId), "1");
   }
 
-  #redisKey(idempotencyKey: string) {
-    return `idempotency-key:${idempotencyKey}`;
+  #redisKey(messageId: string) {
+    return `idempotency:${messageId}`;
   }
 }
