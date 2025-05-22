@@ -65,15 +65,3 @@ async function parsePostRequest(request: NextRequest) {
     message,
   };
 }
-
-// export async function GET(request: NextRequest) {
-//   return new NextResponse(readableStream, {
-//     status: 200,
-//     headers: {
-//       "Content-Type": "text/event-stream",
-//       "Cache-Control": "no-cache, no-transform",
-//       Connection: "keep-alive",
-//       "Transfer-Encoding": "chunked",
-//     },
-//   });
-// }

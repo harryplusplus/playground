@@ -22,7 +22,7 @@ export class ResponseService {
           if (!text) continue;
           await this.#kv.push(this.#redisKey(messageId), `m:${text}`);
         }
-        await this.#kv.push(this.#redisKey(messageId), `c:`);
+        await this.#kv.push(this.#redisKey(messageId), "c:");
       } catch (e) {
         await this.#kv.push(
           this.#redisKey(messageId),
@@ -32,6 +32,10 @@ export class ResponseService {
     };
 
     task();
+  }
+
+  async popEvent(messageId: string) {
+    return await this.#kv.pop(this.#redisKey(messageId));
   }
 
   #redisKey(messageId: string) {
