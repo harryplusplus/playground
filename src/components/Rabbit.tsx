@@ -1,8 +1,14 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
+import { Vector3 } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import * as THREE from "three";
 
-export default function Rabbit() {
+type Props = {
+  scale: number;
+  position: Vector3;
+};
+
+export default function Rabbit({ scale, position }: Props) {
   const { scene, animations } = useGLTF("/Rabbit.glb");
   const { actions, mixer } = useAnimations(animations, scene);
 
@@ -42,5 +48,5 @@ export default function Rabbit() {
     };
   }, [currentAction]);
 
-  return <primitive object={scene} scale={1.5} position={[0, 0, 35]} />;
+  return <primitive object={scene} scale={scale} position={position} />;
 }

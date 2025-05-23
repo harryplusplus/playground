@@ -1,55 +1,39 @@
 import { Billboard, RoundedBox, Text } from "@react-three/drei";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import * as THREE from "three";
 
 type Props = {
   message: string;
-  position: THREE.Vector3;
 };
 
-export default function ChatBubble({ message, position }: Props) {
-  const textRef = useRef<THREE.Object3D & { sync: (fn: () => void) => void }>(
-    null
-  );
+export default function ChatBubble({ message }: Props) {
+  const textRef = useRef<THREE.Object3D>(null);
   const [textSize, setTextSize] = useState<THREE.Vector2>(new THREE.Vector2());
 
-  useLayoutEffect(() => {
-    if (textRef.current) {
-      console.log("@3", textRef.current);
-      console.log("@4", typeof textRef.current.sync === "function");
-      textRef.current.sync(() => {
-        console.log("@5");
-        if (textRef.current) {
-          const box = new THREE.Box3().setFromObject(textRef.current);
-          const size = new THREE.Vector3();
-          box.getSize(size);
-          console.log("@@", size);
-          setTextSize(new THREE.Vector2(size.x, size.y));
-        } else {
-          console.log("@1");
-        }
-      });
-      console.log("@6");
-    } else {
-      console.log("@2");
-    }
-  }, [message]);
-
-  const paddingX = 0.4;
-  const paddingY = 0.3;
+  const paddingX = 0.8;
+  const paddingY = 0.7;
 
   const bubbleWidth = textSize.x + paddingX;
   const bubbleHeight = textSize.y + paddingY;
 
+  const onTextSync = () => {
+    if (textRef.current) {
+      const box = new THREE.Box3().setFromObject(textRef.current);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+      setTextSize(new THREE.Vector2(size.x, size.y));
+    }
+  };
+
   return (
-    <Billboard position={position}>
+    <Billboard position={[0, 7, 40]}>
       <RoundedBox
-        args={[bubbleWidth, bubbleHeight, 0.1]}
-        radius={0.08}
-        smoothness={4}
-        position={[0, 0, -0.01]}
+        args={[bubbleWidth, bubbleHeight, 0.7]}
+        position={[0, 0, -0.5]}
+        radius={0.4}
+        smoothness={12}
       >
-        <meshStandardMaterial color={"#f556e5"} />
+        <meshStandardMaterial color={"#008e85"} />
       </RoundedBox>
       <Text
         ref={textRef}
@@ -57,8 +41,11 @@ export default function ChatBubble({ message, position }: Props) {
         color={"white"}
         anchorX="center"
         anchorY="middle"
-        maxWidth={3}
+        maxWidth={7}
         lineHeight={1.2}
+        onSync={onTextSync}
+        overflowWrap="break-word"
+        font="/Poppins-Bold.ttf"
       >
         {message}
       </Text>
